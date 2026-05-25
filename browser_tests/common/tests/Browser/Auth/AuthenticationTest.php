@@ -28,6 +28,18 @@ test('users can authenticate using the login screen', function () {
     assertAuthenticated();
 });
 
+test('remember me checkbox submits a checked value', function () {
+    $browser = visit(route('login'))
+        ->assertScript("new FormData(document.querySelector('form')).has('remember')", false);
+
+    $browser->script("document.querySelector('#remember, [name=\"remember\"]')?.click()");
+
+    $browser
+        ->assertScript("new FormData(document.querySelector('form')).get('remember')", 'on')
+        ->assertNoConsoleLogs()
+        ->assertNoJavaScriptErrors();
+});
+
 test('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
